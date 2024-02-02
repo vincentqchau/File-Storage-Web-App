@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %} Home {% endblock %}
+{% block content %} 
+
+    <div class="text-center">
+        <h2 class="mt-5" id="welcome-msg">{{ welcome }}</h2>
+        <a href="{{ url_for('authenticate') }}"><button class="btn btn-primary mt-4">Go to Storage</button></a>        
+    </div>
+
+    <script>
+        var head = document.getElementById("welcome-msg");
+        var link = document.getElementById("login");
+        if(head.textContent == "Register to get started") {
+            link.href = "{{ url_for('login') }}";
+            link.textContent = "Log in";
+        } else {
+            link.href = "{{ url_for('logout') }}";
+            link.textContent = "Log out";
+        }
+    </script>
+
+{% endblock %}

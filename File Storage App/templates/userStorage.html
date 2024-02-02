@@ -1,0 +1,128 @@
+{% extends "base.html" %}
+{% block title %} {{name}}'s Storage {% endblock %}
+
+{% block content %} 
+    <div>
+        <div class="mt-4 text-end me-4">
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#add-folder-modal">Add Folder</button>
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#add-file-modal">Add File</button>
+        </div>
+        <div class="ms-5">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    {% for folder in path %} 
+                        <li class="breadcrumb-item"><a href="{{ url_for('storage', uuid=folder[0], folder=folder[2])}}" class="fs-5">{{ folder[1] }}</a></li>
+                    {% endfor %}
+                </ol>
+            </nav>
+        </div>
+    </div>
+
+    <div class="modal fade" id="add-folder-modal" tabindex="-1" aria-labelledby="addFolderModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addFolderModalLabel">Add Folder</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="close-modal-folder"></button>
+                </div>
+                <form action="" method="POST" enctype="multipart/form-data">
+                    <div class="modal-body">
+                        <label for="fn" class="form-label">Folder</label>
+                        <input type="text" name="make-folder" id="fn">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal" id="cancel-folder">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Add</button>
+                    </div>  
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="add-file-modal" tabindex="-1" aria-labelledby="addFileModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header"> 
+                    <h5 class="modal-title" id="addFileModalLabel">Add File</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="close-modal-file"></button>
+                </div>
+                <form action="" method="POST" enctype="multipart/form-data">
+                    <div class="modal-body">
+                        <!-- <input type="file" id="uploadf" name="upload" hidden/>
+                        <label for="uploadf" class="btn btn-primary">Add File</label> -->
+                        <input type="file" id="uploadf" name="upload">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal" id="cancel-file">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Upload</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    {% if files %} 
+        <h2 class="ms-5 mt-4">Files</h2>
+        <ul class="list-group ms-5 mt-3 w-75">
+            {% for file in files %} 
+                <li class="list-group-item">
+                    <form action="" method="POST">
+                        <input type="text" value="{{ file[0] }}" name="delete-file" readonly="readonly" hidden/>
+                        <button type="submit" class="btn btn-outline-danger btn-sm">    
+                            <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                                <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
+                                <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
+                            </svg>
+                        </button>
+                        <a target="_blank" href="{{ url_for('viewFile', uuid=file[1], id=file[0], filename=file[2]) }}">{{ file[2] }}</a>
+                    </form>
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+    {% if folders %}
+        <h2 class="ms-5 mt-2">Folders</h2>
+        <ul class="list-group ms-5 mt-3 w-75">
+            {% for folder in folders %} 
+                <li class="list-group-item">
+                    <div>
+                        <form action="" method="POST">
+                            <input type="text" value="{{ folder[2] }}" name="delete-folder" readonly="readonly" hidden/>
+                            <button type="submit" class="btn btn-outline-danger btn-sm" data-bs-toggle="modal" data-bs-target="{{ folder[2] }}">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                                    <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
+                                    <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
+                                </svg>
+                            </button>
+                            <a href="{{ url_for('storage', uuid=folder[0], folder=folder[2]) }}">{{ folder[1] }}</a>
+                        </form>
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+    <script>
+        var link = document.getElementById("login");
+        link.href = "{{ url_for('logout') }}";
+        link.textContent = "Log out";
+        document.getElementById("cancel-file").onclick = function() {
+            document.getElementById("uploadf").value = ""
+        }
+        document.getElementById("close-modal-file").onclick = function() {
+            document.getElementById("uploadf").value = ""
+        }
+        document.getElementById("cancel-folder").onclick = function() {
+            document.getElementById("fn").value = ""
+        }
+        document.getElementById("close-modal-folder").onclick = function() {
+            document.getElementById("fn").value = ""
+        }
+        document.getElementById("back").onclick = function() {
+            window.history.back();
+        }
+        
+    </script>
+
+{% endblock %}

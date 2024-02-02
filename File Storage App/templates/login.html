@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %} Login {% endblock %}
+
+{% block content %} 
+
+{% with messages = get_flashed_messages() %}
+    {% if messages %} 
+        {% for msg in messages %} 
+            <p class="mt-2 ms-5 text-danger"> <span>&#9888;</span> {{ msg }}</p>
+        {% endfor %} 
+    {% endif %} 
+{% endwith %}
+
+<form action="" method="POST">
+    <div class="mt-3 mb-3 ms-5">
+        <label for="emailf" class="form-label">Email</label>
+        <input type="input" class="form-control w-25" id="emailf" name="email">
+        <label for="passwordf" class="form-label">Password</label>
+        <input type="password" class="form-control w-25" id="passwordf" name="password">
+    </div>
+    <button type="submit" class="btn btn-primary ms-5">Submit</button>
+</form>
+
+{% endblock %}
