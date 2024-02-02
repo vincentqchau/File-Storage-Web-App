@@ -1,5 +1,3 @@
-# end-of-year-project-2021-vincentqchau-ebaadimran-potatotomatoyay
-
 **Clone and run to make use of file system**
 
 ##
